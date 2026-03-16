@@ -1,0 +1,184 @@
+<div
+  class="calendar-shell w-screen h-screen flex items-center justify-center font-['Instrument_Serif',serif]"
+>
+  <div
+    class="calendar-card w-full max-w-350 h-full max-h-230 bg-[#FAFAF8] rounded-3xl shadow-2xl shadow-stone-300/60 flex flex-col overflow-hidden border border-stone-200/80"
+  >
+
+    <div class="flex items-center justify-between px-10 pt-8 pb-4">
+      <div>
+        <h1 class="text-5xl font-['Instrument_Serif'] text-stone-800 tracking-tight leading-none">
+          {{ monthLabel }}
+        </h1>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Prev -->
+        <button
+          (click)="prevMonth()"
+          class="w-10 h-10 flex items-center justify-center rounded-full border border-stone-300 text-stone-500 hover:bg-stone-100 active:scale-95 transition-all"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <!-- Next -->
+        <button
+          (click)="nextMonth()"
+          class="w-10 h-10 flex items-center justify-center rounded-full border border-stone-300 text-stone-500 hover:bg-stone-100 active:scale-95 transition-all"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="mx-10 h-px bg-stone-200 mb-4"></div>
+
+    <div class="grid grid-cols-7 px-8 mb-2">
+      @for (day of weekDays; track day) {
+        <div
+          class="text-center text-[11px] font-mono tracking-[0.2em] uppercase text-stone-400 py-1"
+        >
+          {{ day }}
+        </div>
+      }
+    </div>
+
+    <div
+      class="flex-1 grid px-8 pb-8 gap-y-2"
+      [style.grid-template-rows]="'repeat(' + weeks.length + ', 1fr)'"
+    >
+      @for (week of weeks; track week) {
+        <div class="grid grid-cols-7 gap-2">
+          @for (day of week; track day) {
+            <div
+              (click)="selectDate(day)"
+              [class.opacity-0]="!day"
+              [class.pointer-events-none]="!day"
+              class="relative flex flex-col rounded-2xl cursor-pointer transition-all duration-200 group border border-transparent hover:border-stone-200 hover:shadow-md hover:shadow-stone-200/60 bg-[#EEECE8] hover:bg-white"
+              [class.ring-2]="isSelected(day)"
+              [class.ring-stone-800]="isSelected(day)"
+              [class.bg-stone-800]="isSelected(day)"
+              [class.text-white]="isSelected(day)"
+              [class.hover:bg-stone-800]="isSelected(day)"
+              [class.hover:border-transparent]="isSelected(day)"
+              [class.ring-1]="isToday(day) && !isSelected(day)"
+              [class.ring-violet-400]="isToday(day) && !isSelected(day)"
+            >
+              <!-- Date number -->
+              <span
+                class="absolute top-3 left-4 text-xl font-['Instrument_Serif'] leading-none transition-colors"
+                [class.text-white]="isSelected(day)"
+                [class.text-violet-500]="isToday(day) && !isSelected(day)"
+                [class.font-semibold]="isToday(day) && !isSelected(day)"
+                [class.text-stone-600]="!isSelected(day) && !isToday(day)"
+                [class.group-hover:text-stone-800]="!isSelected(day) && !isToday(day)"
+              >
+                {{ day?.getDate() }}
+              </span>
+
+              <!-- Event dots / chips (bottom of cell) -->
+              <div class="absolute bottom-2 left-2 right-2 flex flex-col gap-0.75">
+                @if (day) {
+                  @for (ev of getEventsForDate(day); track ev; let i = $index) {
+                    @if (i < 2) {
+                      <div class="flex items-center gap-1 overflow-hidden">
+                        <span
+                          class="text-[10px] leading-none shrink-0"
+                          [ngClass]="isSelected(day) ? 'opacity-70' : ''"
+                        >
+                          {{ getCategoryIcon(ev.category) }}
+                        </span>
+                        <span
+                          class="text-[10px] font-mono truncate leading-none"
+                          [ngClass]="isSelected(day) ? 'text-white/80' : 'text-stone-500'"
+                        >
+                          {{ ev.title }}
+                        </span>
+                      </div>
+                    }
+                    @if (i === 2) {
+                      <span
+                        class="text-[9px] font-mono"
+                        [ngClass]="isSelected(day) ? 'text-white/60' : 'text-stone-400'"
+                      >
+                        +{{ getEventsForDate(day).length - 2 }} more
+                      </span>
+                    }
+                  }
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    @if (selectedDate()) {
+      <div
+        class="mx-8 mb-8 rounded-2xl bg-stone-900 text-white px-8 py-5 flex items-center gap-6 animate-slideUp"
+      >
+        <div class="shrink-0">
+          <p class="text-xs font-mono tracking-widest uppercase text-stone-400 mb-0.5">Selected</p>
+          <p class="text-2xl font-['Instrument_Serif'] leading-tight">
+            {{ selectedDate() | date: 'MMMM d, yyyy' }}
+          </p>
+        </div>
+
+        <div class="w-px h-10 bg-stone-700"></div>
+
+        <div class="flex-1 flex flex-wrap gap-2">
+          @if (selectedEvents().length > 0) {
+            @for (ev of selectedEvents(); track ev) {
+              <div class="flex items-center gap-2 bg-stone-800 rounded-full px-4 py-1.5">
+                <span class="text-sm leading-none">{{ getCategoryIcon(ev.category) }}</span>
+                <span class="text-sm font-mono text-stone-200">{{ ev.title }}</span>
+              </div>
+            }
+          } @else {
+            <p class="text-sm font-mono text-stone-500 self-center">No events — a quiet day.</p>
+          }
+        </div>
+
+        <button class="bg-cyan-600 p-4 rounded-lg text-md font-semibold" (click)="show()">Add Event</button>
+
+        <button
+          (click)="selectedDate.set(null)"
+          class="ml-auto text-stone-500 hover:text-white transition-colors shrink-0"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    }
+  </div>
+  @if (showEventModal()) {
+    <div class="fixed inset-0 z-20 flex items-center justify-center backdrop-blur-lg" (click)="hide()">
+      <div class="relative z-30 shadow-2xl" (click)="$event.stopPropagation()">
+        <app-event-adder [selectedDate]="selectedDate()" [showEventModal]="showEventModal()" (closeModal)="hide()" (addEvent)="addToEvents($event)"></app-event-adder>
+      </div>
+    </div>
+  }
+</div>
