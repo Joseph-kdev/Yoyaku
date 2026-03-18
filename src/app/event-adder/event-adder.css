@@ -6,7 +6,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #78716c; /* stone-500 */
+  color: #ededed; /* stone-500 */
   margin-bottom: 0.375rem;
 }
 
@@ -84,7 +84,7 @@
   width: 2.75rem;
   height: 1.5rem;
   border-radius: 999px;
-  background: #e7e5e4;
+  background: #787776;
   border: none;
   cursor: pointer;
   transition: background 0.2s;
@@ -140,7 +140,7 @@
   gap: 0.5rem;
   padding: 0.75rem 1.75rem;
   border-radius: 999px;
-  background: #292524;
+  background: #0091ff;
   color: #fff;
   font-family: 'ui-monospace', monospace;
   font-size: 0.8rem;

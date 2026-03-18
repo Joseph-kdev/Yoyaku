@@ -44,6 +44,15 @@ export class CalendarView implements OnInit {
   ];
 
   ngOnInit(): void {
+    const storedEvents = sessionStorage.getItem('yoyaku_events');
+    if (storedEvents) {
+      try {
+        const parsed = JSON.parse(storedEvents);
+        this.events.set(parsed);
+      } catch (e) {
+        console.error('Failed to parse events from session storage', e);
+      }
+    }
     this.buildCalendar();
   }
 
@@ -108,7 +117,11 @@ export class CalendarView implements OnInit {
   }
 
   addToEvents(newEvent: EventFormData) {
-    this.events.update(currentEvents => [...currentEvents, newEvent])
+    this.events.update(currentEvents => {
+      const updatedEvents = [...currentEvents, newEvent];
+      sessionStorage.setItem('yoyaku_events', JSON.stringify(updatedEvents));
+      return updatedEvents;
+    });
   }
 
   isEventActiveOnDate(event: EventFormData, date:Date): boolean {

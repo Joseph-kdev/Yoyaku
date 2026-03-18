@@ -2,12 +2,12 @@
   class="calendar-shell w-screen h-screen flex items-center justify-center font-['Instrument_Serif',serif]"
 >
   <div
-    class="calendar-card w-full max-w-350 h-full max-h-230 bg-[#FAFAF8] rounded-3xl shadow-2xl shadow-stone-300/60 flex flex-col overflow-hidden border border-stone-200/80"
+    class="calendar-card w-full max-w-350 h-full max-h-230 bg-gray-900 rounded-3xl shadow-2xl shadow-stone-300/60 flex flex-col overflow-hidden"
   >
 
     <div class="flex items-center justify-between px-10 pt-8 pb-4">
       <div>
-        <h1 class="text-5xl font-['Instrument_Serif'] text-stone-800 tracking-tight leading-none">
+        <h1 class="text-4xl font-['Instrument_Serif'] text-stone-300 tracking-tight leading-none">
           {{ monthLabel }}
         </h1>
       </div>
@@ -16,7 +16,7 @@
         <!-- Prev -->
         <button
           (click)="prevMonth()"
-          class="w-10 h-10 flex items-center justify-center rounded-full border border-stone-300 text-stone-500 hover:bg-stone-100 active:scale-95 transition-all"
+          class="w-10 h-10 flex items-center justify-center rounded-full border border-stone-400 text-stone-400 hover:bg-stone-100 active:scale-95 transition-all"
         >
           <svg
             class="w-4 h-4"
@@ -32,7 +32,7 @@
         <!-- Next -->
         <button
           (click)="nextMonth()"
-          class="w-10 h-10 flex items-center justify-center rounded-full border border-stone-300 text-stone-500 hover:bg-stone-100 active:scale-95 transition-all"
+          class="w-10 h-10 flex items-center justify-center rounded-full border border-stone-400 text-stone-400 hover:bg-stone-100 active:scale-95 transition-all"
         >
           <svg
             class="w-4 h-4"
@@ -47,12 +47,12 @@
       </div>
     </div>
 
-    <div class="mx-10 h-px bg-stone-200 mb-4"></div>
+    <div class="mx-10 h-px bg-stone-600 mb-4"></div>
 
     <div class="grid grid-cols-7 px-8 mb-2">
       @for (day of weekDays; track day) {
         <div
-          class="text-center text-[11px] font-mono tracking-[0.2em] uppercase text-stone-400 py-1"
+          class="text-center text-[11px] font-mono tracking-[0.2em] uppercase text-stone-200 py-1"
         >
           {{ day }}
         </div>
@@ -70,7 +70,7 @@
               (click)="selectDate(day)"
               [class.opacity-0]="!day"
               [class.pointer-events-none]="!day"
-              class="relative flex flex-col rounded-2xl cursor-pointer transition-all duration-200 group border border-transparent hover:border-stone-200 hover:shadow-md hover:shadow-stone-200/60 bg-[#EEECE8] hover:bg-white"
+              class="relative flex flex-col rounded-2xl cursor-pointer transition-all duration-200 group border border-transparent hover:border-gray-200 hover:shadow-md hover:shadow-gray-200/60 bg-gray-100 hover:bg-gray-400 shadow-[0_6px_0_#494949] active:shadow-none active:translate-y-1.5"
               [class.ring-2]="isSelected(day)"
               [class.ring-stone-800]="isSelected(day)"
               [class.bg-stone-800]="isSelected(day)"
@@ -78,13 +78,13 @@
               [class.hover:bg-stone-800]="isSelected(day)"
               [class.hover:border-transparent]="isSelected(day)"
               [class.ring-1]="isToday(day) && !isSelected(day)"
-              [class.ring-violet-400]="isToday(day) && !isSelected(day)"
+              [class.ring-cyan-400]="isToday(day) && !isSelected(day)"
             >
               <!-- Date number -->
               <span
                 class="absolute top-3 left-4 text-xl font-['Instrument_Serif'] leading-none transition-colors"
                 [class.text-white]="isSelected(day)"
-                [class.text-violet-500]="isToday(day) && !isSelected(day)"
+                [class.text-cyan-500]="isToday(day) && !isSelected(day)"
                 [class.font-semibold]="isToday(day) && !isSelected(day)"
                 [class.text-stone-600]="!isSelected(day) && !isToday(day)"
                 [class.group-hover:text-stone-800]="!isSelected(day) && !isToday(day)"

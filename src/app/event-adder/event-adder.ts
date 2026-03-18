@@ -61,8 +61,6 @@ export class EventAdder implements OnInit {
   };
 
   ngOnInit() {
-
-
     const selDate = this.selectedDate();
     if (selDate) {
       const year = selDate.getFullYear();

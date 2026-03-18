@@ -1,12 +1,12 @@
 <div class="w-screen max-h-screen p-6 py-10 overflow-y-auto">
   <div class="flex justify-center">
     <div
-      class="w-full max-w-215 bg-[#FAFAF8] rounded-3xl shadow-2xl shadow-stone-300/60 border border-stone-200/80 mt-auto mb-auto"
+      class="w-full max-w-215 bg-gray-700 rounded-3xl shadow-2xl shadow-stone-300/60 mt-auto mb-auto"
     >
       <div class="px-10 pt-8 pb-10 relative">
         <div class="mb-8">
           <h2
-            class="text-4xl text-stone-800 leading-tight"
+            class="text-4xl text-stone-200 leading-tight"
             style="font-family: 'Instrument Serif', serif"
           >
             New Event
@@ -19,7 +19,7 @@
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="size-8"
+            class="size-8 text-stone-100"
           >
             <path
               stroke-linecap="round"
@@ -199,7 +199,7 @@
             >
               <span class="toggle-thumb" [class.on]="form.wantsReminder"></span>
             </button>
-            <span class="text-sm font-mono text-stone-500">
+            <span class="text-sm font-mono text-stone-200">
               {{ form.wantsReminder ? 'Yes, remind me' : 'No reminder' }}
             </span>
           </div>
@@ -207,8 +207,8 @@
 
         <div class="reminder-reveal" [class.open]="form.wantsReminder">
           <div class="reminder-inner">
-            <div class="field-group mt-4 bg-amber-50/60 border border-amber-200/60 rounded-2xl p-4">
-              <label class="field-label text-amber-700">How far in advance?</label>
+            <div class="field-group mt-4 bg-gray-50/60 border border-amber-200/60 rounded-2xl p-4">
+              <label class="field-label text-stone-500">How far in advance?</label>
               <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
                 @for (opt of reminderOptions; track opt.value) {
                   <button
@@ -228,11 +228,11 @@
           </div>
         </div>
 
-        <div class="flex items-center justify-between mt-8 pt-6 border-t border-stone-100">
+        <div class="flex items-center justify-between mt-4 pt-6">
           <button
             type="button"
             (click)="onReset()"
-            class="text-sm font-mono text-stone-400 hover:text-stone-600 transition-colors px-4 py-2 rounded-xl hover:bg-stone-100"
+            class="text-sm font-mono text-stone-200 hover:text-stone-400 transition-colors px-4 py-2 rounded-xl hover:bg-stone-100 border "
           >
             Clear form
           </button>
