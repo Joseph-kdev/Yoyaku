@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+.radial-pattern {
+  background-image: radial-gradient(circle at 2px 2px, #2d3449 1px, transparent 0);
+  background-size: 32px 32px;
+}
+
+.editorial-gradient {
+  background: linear-gradient(135deg, #0b1326 0%, #131b2e 100%);
+}
+
+.cta-gradient {
+  background: linear-gradient(to right, #6cd3f7, #2fd9f4);
+}

@@ -1,6 +1,7 @@
 import { Component, computed, OnInit, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EventAdder, EventFormData, EVENT_CATEGORIES } from '../event-adder/event-adder';
+import { Navbar } from "../navbar/navbar";
 
 export interface CalendarEvent {
   id: number;
@@ -17,7 +18,7 @@ export function getCategoryIconFn(category: string): string {
 @Component({
   selector: 'app-calendar-view',
   standalone: true,
-  imports: [CommonModule, EventAdder],
+  imports: [CommonModule, EventAdder, Navbar],
   templateUrl: './calendar-view.html',
   styleUrls: ['./calendar-view.css'],
 })

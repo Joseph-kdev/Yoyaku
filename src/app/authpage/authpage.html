@@ -1,0 +1,198 @@
+<main
+  class="min-h-screen w-screen flex flex-col md:flex-row overflow-hidden bg-surface text-on-surface font-body selection:bg-tertiary/30"
+>
+  <!-- Left Side: Login Form -->
+  <section class="w-full md:w-[45%] lg:w-[40%] bg-surface flex flex-col relative radial-pattern">
+    <header class="flex justify-between items-center w-full px-10 py-8 max-w-full z-10">
+      <div class="text-4xl font-[Newsreader] italic text-[#dae2fd]">Yoyaku</div>
+    </header>
+    <div class="flex-1 flex flex-col justify-center px-8 sm:px-12 md:px-16 lg:px-24 py-12 z-10">
+      <div class="max-w-md w-full mx-auto">
+        <header class="mb-10">
+          @if (!isSignUp()) {
+            <h1 class="font-headline text-4xl lg:text-5xl text-on-surface mb-3">Welcome back.</h1>
+            <p class="text-on-surface-variant font-body text-sm">
+              Please enter your details to access your events.
+            </p>
+          } @else {
+            <h1 class="font-headline text-4xl lg:text-5xl text-on-surface mb-3">Create account.</h1>
+            <p class="text-on-surface-variant font-body text-sm">
+              Join us and start curating your events.
+            </p>
+          }
+        </header>
+        <form (ngSubmit)="addUser(form)" #form="ngForm" class="space-y-6">
+          <div class="space-y-2">
+            <label
+              class="text-[0.75rem] uppercase tracking-wider font-semibold text-on-surface-variant"
+              for="email"
+              >Email Address</label
+            >
+            <input
+              class="w-full bg-surface-container-low border-none focus:ring-1 focus:ring-secondary/20 rounded-lg py-4 px-4 text-on-surface placeholder:text-on-surface-variant/30 transition-all outline-none"
+              id="email"
+              name="email"
+              placeholder="curator@yoyaku.com"
+              type="email"
+              [(ngModel)] = "user.email"
+              #emailRef="ngModel"
+              required
+            />
+            @if (emailRef.invalid && emailRef.touched) {
+              <div>
+                @if(emailRef.errors?.['required']) {
+                  <small class="text-red-500">Email is required</small>
+                }
+                @if (emailRef.errors?.['email']) {
+                  <small class="text-red-500">Invalid email format</small>
+                }
+              </div>
+            }
+          </div>
+          <div class="space-y-2">
+            <label
+              class="text-[0.75rem] uppercase tracking-wider font-semibold text-on-surface-variant"
+              for="confirm-password"
+            >
+             Password
+            </label>
+            <input
+              class="w-full bg-surface-container-low border-none focus:ring-1 focus:ring-secondary/20 rounded-lg py-4 px-4 text-on-surface placeholder:text-on-surface-variant/30 transition-all outline-none"
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              type="password"
+              [(ngModel)] = "user.password"
+              #passwordRef="ngModel"
+              required
+              minlength="6"
+            />
+            @if (passwordRef.invalid && passwordRef.dirty) {
+              <div>
+                @if (passwordRef.errors?.['required']) {
+                  <small class="text-red-500">Password is required</small>
+                }
+                @if (passwordRef.errors?.['minLength']) {
+                  <small class="text-red-500">Minimum 6 characters</small>
+                }
+              </div>
+            }
+          </div>
+          @if (!isSignUp()) {
+            <div class="flex items-center space-x-3 py-2">
+              <input
+                class="w-4 h-4 rounded bg-surface-container-high border-none text-secondary focus:ring-offset-surface focus:ring-secondary"
+                id="remember"
+                type="checkbox"
+              />
+              <label class="text-sm text-on-surface-variant" for="remember">
+                Keep me signed in for 30 days
+              </label>
+            </div>
+          }
+          <div class="pt-4 space-y-4">
+            <button
+              class="w-full cta-gradient text-on-secondary font-bold py-4 rounded-lg shadow-xl shadow-secondary/10 hover:opacity-90 active:scale-[0.98] transition-all flex justify-center items-center gap-2"
+              type="submit"
+              disabled="form.invalid"
+            >
+              <span>@if (!isSignUp()) { Sign In } @else { Sign Up }</span>
+              <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+            </button>
+            <button
+              class="w-full bg-surface-container-highest/30 border border-outline-variant/15 text-on-surface font-medium py-4 rounded-lg hover:bg-surface-container-highest/50 active:scale-[0.98] transition-all flex justify-center items-center gap-3"
+              type="button"
+              (click)="signInWithGoogle()"
+            >
+              <svg class="w-6 h-6" viewbox="0 0 24 24">
+                <path
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+                  fill="#4285F4"
+                ></path>
+                <path
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-1 .67-2.28 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  fill="#34A853"
+                ></path>
+                <path
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                  fill="#FBBC05"
+                ></path>
+                <path
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  fill="#EA4335"
+                ></path>
+              </svg>
+              <span>Sign in with Google</span>
+            </button>
+          </div>
+        </form>
+        <footer class="mt-12 text-center">
+          @if (!isSignUp()) {
+            <p class="text-sm text-on-surface-variant">
+              Don't have an account?
+              <button
+                (click)="toggleMode()"
+                class="text-secondary font-bold ml-1 hover:underline bg-none border-none cursor-pointer"
+              >
+                Sign Up
+              </button>
+            </p>
+          } @else {
+            <p class="text-sm text-on-surface-variant">
+              Already have an account?
+              <button
+                (click)="toggleMode()"
+                class="text-secondary font-bold ml-1 hover:underline bg-none border-none cursor-pointer"
+              >
+                Sign In
+              </button>
+            </p>
+          }
+        </footer>
+      </div>
+    </div>
+    <!-- Absolute background decoration -->
+    <div
+      class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-secondary/20 to-transparent"
+    ></div>
+  </section>
+  <!-- Right Side: Editorial Content -->
+  <section class="hidden md:flex flex-1 relative editorial-gradient overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <img
+        alt=""
+        class="w-full h-full object-cover opacity-40 mix-blend-luminosity scale-105"
+        data-alt="Abstract deep blue and cyan flowing geometric lines"
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHn5-m2XKtqZtTssfkrJe77pmHTos45k9dVu0RiUsxwMmCuIvyHToMmvDfJRuAJu0hM8kFHJBX_yIoCH7is50JvIGZWcLgS-I7rpuGyRtvLbOcgZDeLCw-n5WuavLNE8dTXPhygNSCBhuWbKF6ncIM8fYltEOJXMmfcHos-dogXpEklu7V9bt4SLRKu00XQ4AfZShB4CGbAYIGU602EqsgU-_Ap8NZgzPLm7PqBn96R2tGZlXgoZ7QbCb32TG5gpRzYDYT5RN9WGY"
+      />
+      <div
+        class="absolute inset-0 bg-gradient-to-t from-[#0b1326] via-transparent to-[#0b1326]/40"
+      ></div>
+      <div
+        class="absolute inset-0 bg-gradient-to-l from-[#0b1326] via-transparent to-transparent"
+      ></div>
+    </div>
+    <div class="relative z-10 flex flex-col justify-end p-16 lg:p-24 w-full">
+      <div class="max-w-2xl">
+        <span
+          class="material-symbols-outlined text-tertiary text-5xl mb-8 select-none"
+          style="font-variation-settings: 'FILL' 1"
+          >format_quote</span
+        >
+        <h2 class="font-headline text-4xl lg:text-5xl italic leading-tight text-on-surface mb-10">
+          "A ship in harbor is safe, but that is not what ships are built for."
+        </h2>
+        <div class="flex items-center gap-6">
+          <div class="h-[1px] w-12 bg-secondary"></div>
+          <div>
+            <p class="text-[0.75rem] uppercase tracking-widest font-bold text-secondary">
+              John A. Shedd
+            </p>
+            <p class="text-sm text-on-surface-variant font-body">Salt from My Attic</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Glassmorphism Stats Overlay -->
+  </section>
+</main>
