@@ -1,7 +1,10 @@
-import { Component, computed, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EventAdder, EventFormData, EVENT_CATEGORIES } from '../event-adder/event-adder';
 import { Navbar } from "../navbar/navbar";
+import { DatabaseService } from '../database-service';
+import { toSignal } from '@angular/core/rxjs-interop'
+import { catchError, Observable, of } from 'rxjs';
 
 export interface CalendarEvent {
   id: number;
@@ -26,6 +29,7 @@ export class CalendarView implements OnInit {
   currentDate = new Date();
   selectedDate = signal<Date | null>(null);
   showEventModal = signal(false);
+  dbService = inject(DatabaseService)
 
   show() {
     this.showEventModal.set(true)
@@ -35,7 +39,14 @@ export class CalendarView implements OnInit {
     this.showEventModal.set(false)
   }
 
-  events: WritableSignal<EventFormData[]> = signal([]);
+  events = toSignal(
+    this.dbService.getEvents().pipe(
+      catchError(() => {
+        const stored = localStorage.getItem('yoyaku_events')
+        return of(stored ? JSON.parse(stored) : [])
+      })
+    )
+  )
 
   weeks: (Date | null)[][] = [];
   readonly weekDays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
@@ -45,15 +56,6 @@ export class CalendarView implements OnInit {
   ];
 
   ngOnInit(): void {
-    const storedEvents = sessionStorage.getItem('yoyaku_events');
-    if (storedEvents) {
-      try {
-        const parsed = JSON.parse(storedEvents);
-        this.events.set(parsed);
-      } catch (e) {
-        console.error('Failed to parse events from session storage', e);
-      }
-    }
     this.buildCalendar();
   }
 
@@ -117,12 +119,15 @@ export class CalendarView implements OnInit {
            date.getFullYear() === selected.getFullYear();
   }
 
-  addToEvents(newEvent: EventFormData) {
-    this.events.update(currentEvents => {
-      const updatedEvents = [...currentEvents, newEvent];
-      sessionStorage.setItem('yoyaku_events', JSON.stringify(updatedEvents));
-      return updatedEvents;
-    });
+  async addToEvents(newEvent: EventFormData) {
+    try {
+      await this.dbService.addEvent(newEvent)
+    } catch (error) {
+      console.log("Error adding event", error);
+      const current = this.events()
+      const updated = [...current, newEvent]
+      localStorage.setItem('yoyaku_events', JSON.stringify(updated))
+    }
   }
 
   isEventActiveOnDate(event: EventFormData, date:Date): boolean {
@@ -141,13 +146,16 @@ export class CalendarView implements OnInit {
     if (!target) return [];
     const targetDayStart = new Date(target.getFullYear(), target.getMonth(), target.getDate());
 
-    return this.events().filter(event => {
+    const currentEvents = this.events() || []
+
+    return currentEvents.filter((event: EventFormData) => {
       return this.isEventActiveOnDate(event, targetDayStart);
     });
   })
 
   getEventsForDate(date:Date): EventFormData[] {
-    return this.events().filter(event =>
+    const currentEvents = this.events() || []
+    return currentEvents.filter((event: EventFormData) =>
       this.isEventActiveOnDate(event, date)
     )
   }

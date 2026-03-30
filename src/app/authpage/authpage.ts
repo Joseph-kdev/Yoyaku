@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Authservice } from '../authservice';
+import { DatabaseService } from '../database-service';
 
 export interface UserModel {
   email: string;
@@ -18,6 +19,7 @@ export class Authpage {
   isSignUp = signal(false);
   authService = inject(Authservice)
   router = inject(Router)
+  dbService = inject(DatabaseService)
 
   constructor() {
     this.authService.user$.subscribe(user => {
@@ -41,6 +43,7 @@ export class Authpage {
     if(this.isSignUp()) {
       try {
         await this.authService.register(this.user.email, this.user.password)
+        await this.dbService.syncLocalStorageEvents()
         return
       } catch (error) {
         console.log("Failed to register user", error)
@@ -49,6 +52,7 @@ export class Authpage {
     }
     try {
       await this.authService.login(this.user.email, this.user.password)
+      await this.dbService.syncLocalStorageEvents()
       return
     } catch (error) {
       console.log("Failed to login user", error)
@@ -59,6 +63,7 @@ export class Authpage {
   async signInWithGoogle() {
     try {
       await this.authService.loginWithGoogle()
+      await this.dbService.syncLocalStorageEvents()
       return
     } catch (error) {
       console.log("Failed Google auth", error)
