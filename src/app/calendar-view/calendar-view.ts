@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { EventAdder, EventFormData, EVENT_CATEGORIES } from '../event-adder/event-adder';
 import { Navbar } from "../navbar/navbar";
 import { DatabaseService } from '../database-service';
-import { toSignal } from '@angular/core/rxjs-interop'
-import { catchError, Observable, of } from 'rxjs';
+import { toSignal, toObservable } from '@angular/core/rxjs-interop'
+import { catchError, Observable, of, switchMap } from 'rxjs';
 
 export interface CalendarEvent {
   id: number;
@@ -29,6 +29,10 @@ export class CalendarView implements OnInit {
   currentDate = new Date();
   selectedDate = signal<Date | null>(null);
   showEventModal = signal(false);
+  deleteDialog = signal(false)
+  editMode = signal(false)
+  eventToDelete = signal<(EventFormData & { id: string }) | null>(null)
+  eventToEdit = signal<(EventFormData & { id: string }) | null>(null)
   dbService = inject(DatabaseService)
 
   show() {
@@ -39,12 +43,60 @@ export class CalendarView implements OnInit {
     this.showEventModal.set(false)
   }
 
+  private refreshCount = signal(0);
+
+  private refreshEvents() {
+    this.refreshCount.update(c => c + 1);
+  }
+
+  showDeleteDialog(ev: EventFormData & { id: string }) {
+    this.eventToDelete.set(ev)
+    this.deleteDialog.set(true)
+  }
+
+  closeDeleteDialog() {
+    this.deleteDialog.set(false)
+    this.eventToDelete.set(null)
+  }
+
+  async confirmDelete() {
+    const event = this.eventToDelete();
+    if (!event) return;
+
+    try {
+      await this.dbService.deleteEvent(event.id);
+      this.closeDeleteDialog();
+    } catch (error) {
+      console.log('Failed to delete event:', error);
+      const events = localStorage.getItem("yoyaku_events")
+      if(events) {
+        const parsedEvents = JSON.parse(events)
+        const updated = parsedEvents.filter((e: EventFormData) =>
+          e.title !== event.title
+        )
+        localStorage.setItem('yoyaku_events', JSON.stringify(updated))
+        this.refreshEvents()
+      }
+    }
+    this.closeDeleteDialog()
+  }
+
+  showEditDialog(ev: EventFormData & { id: string }) {
+    this.eventToEdit.set(ev)
+    this.editMode.set(true)
+    this.show()
+  }
+
   events = toSignal(
-    this.dbService.getEvents().pipe(
-      catchError(() => {
-        const stored = localStorage.getItem('yoyaku_events')
-        return of(stored ? JSON.parse(stored) : [])
-      })
+    toObservable(this.refreshCount).pipe(
+      switchMap(() =>
+        this.dbService.getEvents().pipe(
+          catchError(() => {
+            const stored = localStorage.getItem('yoyaku_events')
+            return of(stored ? JSON.parse(stored) : [])
+          })
+        )
+      )
     )
   )
 
@@ -122,11 +174,13 @@ export class CalendarView implements OnInit {
   async addToEvents(newEvent: EventFormData) {
     try {
       await this.dbService.addEvent(newEvent)
+      this.refreshEvents();
     } catch (error) {
       console.log("Error adding event", error);
       const current = this.events()
       const updated = [...current, newEvent]
       localStorage.setItem('yoyaku_events', JSON.stringify(updated))
+      this.refreshEvents();
     }
   }
 
@@ -158,5 +212,26 @@ export class CalendarView implements OnInit {
     return currentEvents.filter((event: EventFormData) =>
       this.isEventActiveOnDate(event, date)
     )
+  }
+
+  async updateEvent(event: EventFormData & {id: string}) {
+    try {
+      await this.dbService.updateEvent(event.id, event)
+      this.refreshEvents();
+      this.editMode.set(false)
+      this.eventToEdit.set(null)
+      this.hide()
+    } catch (error) {
+      console.log("Error updating event", event);
+      const current = this.events() || [];
+      const updated = current.map((e: any) => {
+        return e.id === event.id ? event : e;
+      });
+      localStorage.setItem('yoyaku_events', JSON.stringify(updated));
+      this.refreshEvents();
+      this.editMode.set(false)
+      this.eventToEdit.set(null)
+      this.hide()
+    }
   }
 }

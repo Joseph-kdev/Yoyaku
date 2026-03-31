@@ -36,12 +36,15 @@ export interface EventFormData {
   styleUrl: './event-adder.css',
 })
 export class EventAdder implements OnInit {
-  showEventModal = input.required<boolean>()
+  showEventModal = input.required<boolean>();
   selectedDate = input<Date | null>(null);
   closeModal = output<void>();
   addEvent = output<EventFormData>();
+  updateEvent = output<EventFormData & { id: string }>();
+  editMode = input<boolean>();
+  eventToEdit = input<EventFormData | null>();
 
-
+  eventId: string | null = null;
 
   submitted = false;
   submitSuccess = false;
@@ -61,6 +64,12 @@ export class EventAdder implements OnInit {
   };
 
   ngOnInit() {
+    if (this.editMode() && this.eventToEdit()) {
+      const event = this.eventToEdit()!;
+      this.eventId = (event as any).id || null;
+      this.form = { ...event };
+    }
+
     const selDate = this.selectedDate();
     if (selDate) {
       const year = selDate.getFullYear();
@@ -135,12 +144,23 @@ export class EventAdder implements OnInit {
   onSubmit(): void {
     this.submitted = true;
     if (!this.isValid()) return;
-    this.addEvent.emit(this.form)
+
+    if (this.editMode() && this.eventId) {
+      this.updateEvent.emit({ ...this.form, id: this.eventId });
+      this.submitSuccess = true;
+      setTimeout(() => {
+        this.submitSuccess = false;
+        this.closeModal.emit();
+      }, 1000);
+      return;
+    }
+
+    this.addEvent.emit(this.form);
     this.submitSuccess = true;
     setTimeout(() => {
       this.submitSuccess = false;
       this.closeModal.emit();
-    }, 3000);
+    }, 1000);
   }
 
   onClose(): void {

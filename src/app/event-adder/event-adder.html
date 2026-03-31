@@ -9,7 +9,7 @@
             class="text-4xl text-stone-200 leading-tight"
             style="font-family: 'Instrument Serif', serif"
           >
-            New Event
+            {{editMode() ? "Edit event" : "New Event"}}
           </h2>
         </div>
         <button class="absolute top-10 right-8" (click)="onClose()">
@@ -242,7 +242,7 @@
             class="submit-btn"
             [class.opacity-50]="submitted && !isValid()"
           >
-            <span>Save Event</span>
+            <span>{{editMode() ? "Update" : "Save Event"}}</span>
             <svg
               class="w-4 h-4"
               fill="none"
