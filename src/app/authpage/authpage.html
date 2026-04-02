@@ -1,14 +1,14 @@
 <main
-  class="min-h-screen w-screen flex flex-col md:flex-row overflow-hidden bg-surface text-on-surface font-body selection:bg-tertiary/30"
+  class=" flex flex-col md:flex-row overflow-hidden bg-surface text-on-surface font-body selection:bg-tertiary/30 h-screen"
 >
   <!-- Left Side: Login Form -->
   <section class="w-full md:w-[45%] lg:w-[40%] bg-surface flex flex-col relative radial-pattern">
-    <header class="flex justify-between items-center w-full px-10 py-8 max-w-full z-10">
+    <header class="flex justify-between items-center w-full px-10 py-10 md:py-2 max-w-full z-10">
       <div class="text-4xl font-[Newsreader] italic text-[#dae2fd]">Yoyaku</div>
     </header>
-    <div class="flex-1 flex flex-col justify-center px-8 sm:px-12 md:px-16 lg:px-24 py-12 z-10">
+    <div class="flex-1 flex flex-col justify-center px-8 sm:px-12 md:px-16 lg:px-24 py-8 z-10">
       <div class="max-w-md w-full mx-auto">
-        <header class="mb-10">
+        <header class="mb-8">
           @if (!isSignUp()) {
             <h1 class="font-headline text-4xl lg:text-5xl text-on-surface mb-3">Welcome back.</h1>
             <p class="text-on-surface-variant font-body text-sm">
