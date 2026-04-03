@@ -1,59 +1,199 @@
 # Yoyaku
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.5.
+A modern, feature-rich calendar and event management application built with Angular and Firebase. Yoyaku helps you organize your schedule with intuitive event creation, categorization, and reminder features.
 
-## Development server
+![Yoyaku Screenshot](./screenshots/main-screen.png)
 
-To start a local development server, run:
+## ✨ Features
+
+### Event Management
+- **Create Events**: Easily add events with title, description, location, and timing details
+- **Edit & Delete**: Modify or remove existing events with a simple click
+- **Event Categories**: Organize events into categories:
+  - 👥 Meeting
+  - 📅 Appointment
+  - ✅ Task
+  - 🔔 Reminder
+  - 🎉 Social
+  - 📌 Other
+
+### Priority System
+- **Low Priority**: Green indicators for less urgent events
+- **Medium Priority**: Amber indicators for standard events
+- **High Priority**: Red indicators for urgent events
+
+### Reminder System
+- Configurable reminders from 5 minutes to 1 week before events
+- Email notifications (when enabled)
+
+### Calendar View
+- **Month View**: Navigate through months with previous/next controls
+- **Interactive Dates**: Click on any date to view or add events
+- **Today Highlight**: Quick navigation to the current date
+- **Event Display**: Visual indicators showing events on each date
+
+### User Authentication
+- **Email/Password**: Traditional registration and login
+- **Google OAuth**: Quick sign-in with your Google account
+- **Secure Storage**: Firebase authentication with encrypted data
+
+### Data Persistence
+- **Cloud Storage**: Firebase Firestore for reliable data storage
+- **Local Fallback**: LocalStorage backup for offline access
+- **Auto-sync**: Seamless synchronization between local and cloud data
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Angular 21.1.0** - Modern web framework with TypeScript
+- **Tailwind CSS 4.1.12** - Utility-first CSS framework
+- **Angular CDK** - Component Dev Kit for advanced UI components
+- **Lucide Angular** - Beautiful, consistent icon library
+
+### Backend & Services
+- **Firebase Authentication** - Secure user authentication
+- **Firebase Firestore** - NoSQL database for event storage
+- **Firebase Analytics** - Usage analytics and insights
+
+### Development Tools
+- **Angular CLI 21.1.5** - Command-line interface for Angular
+- **TypeScript 5.9.2** - Type-safe JavaScript
+- **Vitest 4.0.8** - Fast unit testing framework
+- **PostCSS 4.1.12** - CSS processing
+- **Prettier** - Code formatting
+
+### Build & Deployment
+- **Vercel** - Deployment platform with automatic builds
+- **Angular Build** - Optimized production builds
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Before you begin, ensure you have the following installed:
+- [Node.js](https://nodejs.org/) (v18 or higher recommended)
+- [npm](https://www.npmjs.com/) (comes with Node.js)
+- [Angular CLI](https://angular.io/cli) (v21 or higher)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Joseph-kdev/Yoyaku.git
+   cd Yoyaku
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Configure Firebase**
+   - Create a new Firebase project at [Firebase Console](https://console.firebase.google.com/)
+   - Enable Authentication (Email/Password and Google providers)
+   - Enable Firestore Database
+   - Copy your Firebase configuration
+   - Update `src/environments/environment.ts` with your Firebase config:
+
+   ```typescript
+   export const environment = {
+     apiKey: "YOUR_API_KEY",
+     authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+     projectId: "YOUR_PROJECT_ID",
+     storageBucket: "YOUR_PROJECT_ID.appspot.com",
+     messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+     appId: "YOUR_APP_ID",
+     measurementId: "YOUR_MEASUREMENT_ID"
+   };
+   ```
+
+4. **Start the development server**
+   ```bash
+   ng serve
+   ```
+
+5. **Open your browser**
+   Navigate to `http://localhost:4200/`
+
+### Development Commands
 
 ```bash
-ng serve
-```
+# Start development server
+npm start
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+# Build for production
+npm run build
 
-## Code scaffolding
+# Watch for changes
+npm run watch
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+# Run unit tests
+npm test
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
+# Run e2e tests
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### Building for Production
 
-## Additional Resources
+To create a production build:
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+ng build --configuration=production
+```
+
+The build artifacts will be stored in the `dist/` directory.
+
+## 🤝 Contributing
+
+Contributions are welcomed:
+
+### Getting Started
+
+1. **Fork the repository**
+   Click the "Fork" button at the top right of the repository page.
+
+2. **Clone your fork**
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/Yoyaku.git
+   cd Yoyaku
+   ```
+
+3. **Create a branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+4. **Make your changes**
+   - Follow the existing code style
+   - Add tests for new features
+   - Update documentation as needed
+
+5. **Commit your changes**
+   ```bash
+   git commit -m "Add your message here"
+   ```
+
+6. **Push to your fork**
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+7. **Create a Pull Request**
+   Go to the original repository and create a pull request.
+
+### Reporting Issues
+
+- Use the [GitHub Issues](https://github.com/Joseph-kdev/Yoyaku/issues) page
+- Provide detailed descriptions and steps to reproduce
+- Include screenshots when applicable
+
+### Feature Requests
+
+- Open an issue with the "enhancement" label
+- Describe the feature and its benefits
+- Be open to discussion and feedback
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
