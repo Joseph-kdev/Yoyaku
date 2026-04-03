@@ -1,7 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
 import { CalendarView } from './calendar-view/calendar-view';
-import { Auth, user } from '@angular/fire/auth';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,6 +10,21 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./app.css'],
   standalone: true
 })
-export class App {
+export class App implements OnInit {
+  showWarning = signal(false);
+
+  ngOnInit(): void {
+    const isSmallScreen = window.innerWidth <= 767;
+    const dismissed = sessionStorage.getItem('smallScreenWarningDismissed') === 'true';
+
+    if (isSmallScreen && !dismissed) {
+      this.showWarning.set(true);
+    }
+  }
+
+  dismissWarning(): void {
+    this.showWarning.set(false);
+    sessionStorage.setItem('smallScreenWarningDismissed', 'true');
+  }
 
 }
